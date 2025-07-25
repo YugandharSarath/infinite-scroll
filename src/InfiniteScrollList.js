@@ -4,7 +4,8 @@ import "./App.css";
 const TOTAL_ITEMS = 50;
 const PAGE_SIZE = 10;
 
-const mockFetch = (page: number): Promise<string[]> => {
+// 👇 JavaScript version: no `: Promise<string[]>`
+const mockFetch = (page) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       const start = (page - 1) * PAGE_SIZE;
@@ -19,16 +20,16 @@ const mockFetch = (page: number): Promise<string[]> => {
 };
 
 export default function App() {
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const loaderRef = useRef<HTMLDivElement | null>(null);
-  const didLoadPageRef = useRef<Set<number>>(new Set()); // 👈 To track already-loaded pages
+  const loaderRef = useRef(null);
+  const didLoadPageRef = useRef(new Set()); // ✅ Set for JS too
 
   useEffect(() => {
     const loadItems = async () => {
-      if (didLoadPageRef.current.has(page)) return; // Prevent duplicate fetch
+      if (didLoadPageRef.current.has(page)) return;
       didLoadPageRef.current.add(page);
 
       setIsLoading(true);
@@ -61,7 +62,6 @@ export default function App() {
 
   return (
     <div className="container">
-      <h1>Infinite Scroll</h1>
       <ul className="list">
         {items.map((item) => (
           <li key={item} className="item">
